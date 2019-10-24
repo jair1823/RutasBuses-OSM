@@ -1,1 +1,10 @@
-<p>guest-view works!</p>
+<div>
+    <ngb-timepicker [(ngModel)]="time" [meridian]="meridian"></ngb-timepicker>
+</div>
+
+
+<button class="btn btn-sm btn-outline-{{meridian ? 'success' : 'danger'}}" (click)="toggleMeridian()">
+    Meridian - {{meridian ? "ON" : "OFF"}}
+</button>
+<hr>
+<pre>Selected time: {{time | json}}</pre>

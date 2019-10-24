@@ -1,1 +1,9 @@
+<div *ngIf="logged; else loggedOut">
+    <app-navbar-user></app-navbar-user>
+</div>
+
+<ng-template #loggedOut>
+    <app-navbar></app-navbar>
+</ng-template>
+
 <router-outlet></router-outlet>

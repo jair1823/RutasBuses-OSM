@@ -8,7 +8,12 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GuestViewComponent } from './components/guest-view/guest-view.component';
-import { UserViewComponent } from './components/user-view/user-view.component'
+import { UserViewComponent } from './components/user-view/user-view.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { NavbarUserComponent } from './components/navbar-user/navbar-user.component'
+import { HttpClientModule } from '@angular/common/http'
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { SignInService } from './services/sign-in.service';
 
 @NgModule({
   declarations: [
@@ -16,15 +21,21 @@ import { UserViewComponent } from './components/user-view/user-view.component'
     SignInComponent,
     SignUpComponent,
     GuestViewComponent,
-    UserViewComponent
+    UserViewComponent,
+    NavbarComponent,
+    NavbarUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    SignInService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
