@@ -1,0 +1,69 @@
+<div class="container mt-2">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <form [formGroup]="inForm" (ngSubmit)="submit()">
+                        <div class="form-group">
+                            <p>Nombre</p>
+                            <input autofocus formControlName="name" class="form-control" type="text"
+                                [ngClass]="{'is-invalid':submitted && f.name.errors}">
+                            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                <p *ngIf="f.username.errors.required">
+                                    Escribe tu nombre.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p>Apellido</p>
+                            <input formControlName="last_name" class="form-control" type="text"
+                                [ngClass]="{'is-invalid':submitted && f.last_name.errors}">
+                            <div *ngIf="submitted && f.last_name.errors" class="invalid-feedback">
+                                <p *ngIf="f.username.errors.required">
+                                    Escribe tu apellido.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p>Segundo apellido</p>
+                            <input formControlName="second_last_name" class="form-control" type="text"
+                                [ngClass]="{'is-invalid':submitted && f.second_last_name.errors}">
+                            <div *ngIf="submitted && f.second_last_name.errors" class="invalid-feedback">
+                                <p *ngIf="f.username.errors.required">
+                                    Escribe tu segundo apellido.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p>Nombre de Usuario</p>
+                            <input formControlName="username" class="form-control" type="text"
+                                [ngClass]="{'is-invalid':submitted && f.username.errors}">
+                            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                                <p *ngIf="f.username.errors.required">
+                                    Escribe tu nombre de usuario.
+                                </p>
+                                <!-- <p *ngIf="f.username.errors.minlength">
+                                    Este nombre de usuario ya está ocupado.
+                                </p> -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p>Contraseña</p>
+                            <input formControlName="password" class="form-control" type="password"
+                                [ngClass]="{'is-invalid':submitted && f.password.errors}">
+                            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                <p *ngIf="f.password.errors.required">
+                                    Escribe tu contraseña.
+                                </p>
+                                <p *ngIf="f.password.errors.minlength">
+                                    La contraseña tiene mínimo 4 caracteres.
+                                </p>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block">Registrarme</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
