@@ -7,8 +7,14 @@ import { UserViewComponent } from './components/user-view/user-view.component';
 
 
 const routes: Routes = [
+
   {
     path: '',
+    redirectTo: 'Inicio',
+    pathMatch: 'full'
+  },
+  {
+    path: 'Inicio',
     component: GuestViewComponent
   },
   {

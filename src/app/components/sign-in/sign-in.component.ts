@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
+import { SignInService } from 'src/app/services/sign-in.service';
+import { Alert } from 'src/app/models/alert';
+
+
+const SIGNINFAIL: Alert = {
+  type: 'danger',
+  message: 'Credenciales incorrectas.'
+};
 
 @Component({
   selector: 'app-sign-in',
@@ -10,32 +18,63 @@ import { Router } from '@angular/router';
 export class SignInComponent implements OnInit {
 
   inForm: FormGroup;
-  submitted:boolean=false;
+  submitted: boolean = false;
 
-  constructor(private formBuilder:FormBuilder, private router:Router) { }
+  signInFail: Alert;
+
+  constructor(private formBuilder: FormBuilder, private router: Router, private signIn: SignInService) {
+
+  }
+
+  closeSignInFail() {
+    this.signInFail = undefined;
+  }
+
+  resetSignInFail() {
+    this.signInFail = SIGNINFAIL;
+  }
 
   ngOnInit() {
     this.construirForm();
   }
 
-  construirForm(){
+  construirForm() {
     this.inForm = this.formBuilder.group({
-      username: ['',[Validators.required]],
-      password: ['',[Validators.required]]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 
-  submit(){
+  submit() {
     this.submitted = true;
-    if(this.inForm.invalid){
+    if (this.inForm.invalid) {
       return;
     }
-    //revisar credenciales
-    //si todo bien entonces lléveme a vista
-    this.router.navigate(['mapea']);
+
+    let data = {
+      username: this.inForm.value.username,
+      password: this.inForm.value.password
+    }
+
+    this.signIn.authenticate(data).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          //correcta
+          this.signIn.saveLocal(r.data);
+          this.router.navigate(['mapea']);
+        } else {
+          this.resetSignInFail();
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('Error con laravel.');
+      }
+    );
   }
 
-  get f(){
+  get f() {
     return this.inForm.controls;
   }
 

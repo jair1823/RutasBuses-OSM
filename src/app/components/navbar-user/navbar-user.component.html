@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary text-uppercase sticky-top mb-3">
+    <a class="navbar-brand font-weight-normal" [routerLink]="['/','']">Rutas Costa Rica</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto font-weight-normal">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/','mapea']" routerLinkActive="active">Editar mapa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/','Inicio']" routerLinkActive="active">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="logOut()" [routerLink]="['/']">Salir</a>
+
+            </li>
+        </ul>
+    </div>
+</nav>

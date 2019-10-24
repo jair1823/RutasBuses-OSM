@@ -6,10 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./guest-view.component.css']
 })
 export class GuestViewComponent implements OnInit {
+  time = { hour: 13, minute: 30 };
+  meridian = true;
+
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  toggleMeridian() {
+    this.meridian = !this.meridian;
+  }
 }
