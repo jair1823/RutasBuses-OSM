@@ -19,12 +19,9 @@ export class SignInComponent implements OnInit {
 
   inForm: FormGroup;
   submitted: boolean = false;
-
   signInFail: Alert;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private signIn: SignInService) {
-
-  }
+  constructor(private formBuilder: FormBuilder, private router: Router, private signIn: SignInService) {}
 
   closeSignInFail() {
     this.signInFail = undefined;
@@ -60,7 +57,6 @@ export class SignInComponent implements OnInit {
       res => {
         let r: any = res;
         if (r.success) {
-          //correcta
           this.signIn.saveLocal(r.data);
           this.router.navigate(['mapea']);
         } else {

@@ -4,17 +4,18 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { GuestViewComponent } from './components/guest-view/guest-view.component';
 import { UserViewComponent } from './components/user-view/user-view.component';
+import { UserAuthenticateGuard } from './guards/user-authenticate.guard';
 
 
 const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'Inicio',
+    redirectTo: 'inicio',
     pathMatch: 'full'
   },
   {
-    path: 'Inicio',
+    path: 'inicio',
     component: GuestViewComponent
   },
   {
@@ -27,11 +28,12 @@ const routes: Routes = [
   },
   {
     path: 'mapea',
-    component: UserViewComponent
+    component: UserViewComponent,
+    canActivate: [UserAuthenticateGuard]
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'inicio',
     pathMatch: 'full'
   }
 ];
