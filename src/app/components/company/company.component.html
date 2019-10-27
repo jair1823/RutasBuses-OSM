@@ -1,0 +1,21 @@
+<div class="container">
+    <p>
+        ¿No encuentras una empresa?<button [routerLink]="['/','nueva-empresa']" type="button"
+            class="btn btn-outline-primary ml-2">Crea una nueva</button>
+    </p>
+    <ng-template ngFor let-c [ngForOf]="companies">
+        <div class="card mb-2">
+            <div class="card-body">
+                <h3 class="card-title">{{c.name}}</h3>
+                <p class="card-text">
+                    Dirección: {{c.address}}<br>
+                    Teléfono: {{c.phone}}
+                </p>
+                <button [value]="c.id_company" (click)="editCompany($event.currentTarget)" type="button"
+                    class="btn btn-primary">Detalles</button>
+                <button [value]="c.id_company" (click)="deleteCompany($event.currentTarget)" type="button"
+                    class="btn btn-danger ml-2">Eliminar</button>
+            </div>
+        </div>
+    </ng-template>
+</div>
