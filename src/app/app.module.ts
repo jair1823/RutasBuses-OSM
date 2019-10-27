@@ -14,6 +14,9 @@ import { NavbarUserComponent } from './components/navbar-user/navbar-user.compon
 import { HttpClientModule } from '@angular/common/http'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { SignInService } from './services/sign-in.service';
+import { SignUpService } from './services/sign-up.service';
+import { CompanyComponent } from './components/company/company.component';
+import { CompanyFormComponent } from './components/company-form/company-form.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,9 @@ import { SignInService } from './services/sign-in.service';
     GuestViewComponent,
     UserViewComponent,
     NavbarComponent,
-    NavbarUserComponent
+    NavbarUserComponent,
+    CompanyComponent,
+    CompanyFormComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +39,8 @@ import { SignInService } from './services/sign-in.service';
     HttpClientModule
   ],
   providers: [
-    SignInService
+    SignInService,
+    SignUpService
   ],
   bootstrap: [AppComponent]
 })
