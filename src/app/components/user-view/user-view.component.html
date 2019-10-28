@@ -1,1 +1,162 @@
-<p>user-view works!</p>
+<div class="container-fluid">
+
+    <!-- <div class="osm-map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)">
+    </div> -->
+
+    <div class="row">
+        <div class="col-7">
+            <div class="osm-map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
+                (leafletClick)="onClickMap($event)">
+            </div>
+
+            <div class="col-12 text-right" *ngIf="messages?.length > 0">
+                <button class="btn btn-primary" (click)="deletePoint()">Eliminar ultimo</button>
+            </div>
+
+            <div class="row limite overflow-auto mb-3" *ngIf="messages?.length > 0">
+
+                <div class="col-3" *ngFor="let m of messages">
+                    Punto: {{m.id}}
+
+                    <div class="form-group">
+                        <textarea class="form-control" (keyup)="updateMessage(m.id)" [id]="m.id"
+                            [value]="m.me"></textarea>
+                    </div>
+                    <button (click)="new_place(m.id)" class="btn btn-primary">Nuevo punto</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-5">
+            <form [formGroup]="routeForm" (ngSubmit)="createRoute()">
+                <div class="form-row">
+
+                    <div class="col-5 form-group">
+                        <label>Compañía</label>
+                        <select class="form-control" formControlName="company"
+                            [ngClass]="{'is-invalid':submitted && f.company.errors}">
+                            <option [ngValue]="null" disabled>Seleccione</option>
+                            <option *ngFor="let c of companies" [ngValue]="c">{{c.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-5 form-group">
+                        <label>Numero de ruta</label>
+                        <input class="form-control" type="text" formControlName="number"
+                            [ngClass]="{'is-invalid':submitted && f.number.errors}">
+                    </div>
+
+                    <div class="col-12 form-group">
+                        <label>Descripción</label>
+                        <textarea rows="3" class="form-control" formControlName="description"
+                            [ngClass]="{'is-invalid':submitted && f.description.errors}">
+                        </textarea>
+                    </div>
+
+                    <label class="col-12">Horario de atención</label>
+
+                    <div class="form-group col-3">
+                        <label>Desde</label>
+                        <div>
+                            <ngb-timepicker [(ngModel)]="sTime" formControlName="start_time">
+                            </ngb-timepicker>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-3">
+                        <label>Hasta</label>
+                        <div>
+                            <ngb-timepicker [(ngModel)]="eTime" formControlName="end_time">
+                            </ngb-timepicker>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-6">
+                        <div class="form-row">
+                            <div class="col-6 form-group">
+                                <label>Precio</label>
+                                <input class="form-control" type="text" formControlName="ticket_cost"
+                                    [ngClass]="{'is-invalid':submitted && f.ticket_cost.errors}">
+                            </div>
+                            <div class="col-6 form-group">
+                                <label>Duración(minutos)</label>
+                                <input class="form-control" type="text" formControlName="duration"
+                                    [ngClass]="{'is-invalid':submitted && f.duration.errors}">
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-11 form-group">
+
+                                <input type="checkbox" class="form-check-input" formControlName="disability_system"
+                                    [ngClass]="{'is-invalid':submitted && f.disability_system.errors}">
+                                <label class="form-check-label">Acceso para discapacitados</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-5">
+                        <label>Origen</label>
+                        <div class="form-group">
+                            <select class="form-control" formControlName="originP" (change)="getCanton(true)"
+                                [ngClass]="{'is-invalid':submitted && f.originP.errors}">
+                                <option [ngValue]="null" disabled>Provincia</option>
+                                <option *ngFor="let p of provinciasO" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+
+                            <select class="form-control" formControlName="originC" (change)="getDistric(true)"
+                                [ngClass]="{'is-invalid':submitted && f.originC.errors}">
+                                <option [ngValue]="null" disabled>Canton</option>
+                                <option *ngFor="let p of cantonesO" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+
+                            <select class="form-control" formControlName="origin"
+                                [ngClass]="{'is-invalid':submitted && f.origin.errors}">
+                                <option [ngValue]="null" disabled>Distrito</option>
+                                <option *ngFor="let p of districtoO" [ngValue]="p">{{p.name}}</option>
+
+                                <!-- <option *ngFor="let c of companies" [ngValue]="c">{{c.name}}</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                    <div class="form-group col-5">
+                        <label>Destino</label>
+                        <div class="form-group">
+                            <select class="form-control" formControlName="destinationP" (change)="getCanton(false)"
+                                [ngClass]="{'is-invalid':submitted && f.destinationP.errors}">
+                                <option [ngValue]="null" disabled>Provincia</option>
+                                <option *ngFor="let p of provinciasD" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+
+                            <select class="form-control" formControlName="destinationC" (change)="getDistric(false)"
+                                [ngClass]="{'is-invalid':submitted && f.destinationC.errors}">
+                                <option [ngValue]="null" disabled>Canton</option>
+                                <option *ngFor="let p of cantonesD" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+
+                            <select class="form-control" formControlName="destination"
+                                [ngClass]="{'is-invalid':submitted && f.destination.errors}">
+                                <option [ngValue]="null" disabled>Distrito</option>
+                                <option *ngFor="let p of districtoD" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+                <button class="btn btn-primary">Crear</button>
+            </form>
+        </div>
+    </div>
+</div>

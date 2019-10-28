@@ -1,102 +1,134 @@
 <div class="container">
     <form [formGroup]="inForm" (ngSubmit)="submit()">
-        <div class="form-group">
-            <p>Nombre</p>
-            <input autofocus type="text" class="form-control" formControlName="name"
-                [ngClass]="{'is-invalid':submitted && f.name.errors}">
-            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                <p *ngIf="f.name.errors.required">
-                    Escribe el nombre de la empresa.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <p>Zona de Servicio</p>
-            <input type="text" class="form-control" formControlName="service_zone"
-                [ngClass]="{'is-invalid':submitted && f.service_zone.errors}">
-            <div *ngIf="submitted && f.service_zone.errors" class="invalid-feedback">
-                <p *ngIf="f.service_zone.errors.required">
-                    Escribe la zona de servicio.
-                </p>
-            </div>
-        </div>
+
         <div class="form-row">
             <div class="form-group col-4">
-                <p>Teléfono</p>
-                <input type="text" class="form-control" formControlName="phone"
-                    [ngClass]="{'is-invalid':submitted && f.phone.errors}">
-                <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
-                    <p *ngIf="f.phone.errors.required">
-                        Escribe el número de teléfono.
-                    </p>
+                <label>Nombre</label>
+                <input autofocus type="text" class="form-control" formControlName="name"
+                    [ngClass]="{'is-invalid':submitted && f.name.errors}">
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <label *ngIf="f.name.errors.required">
+                        Escribe el nombre de la empresa.
+                    </label>
                 </div>
             </div>
             <div class="form-group col-8">
-                <p>Email</p>
+                <label>Zona de Servicio</label>
+                <input type="text" class="form-control" formControlName="service_zone"
+                    [ngClass]="{'is-invalid':submitted && f.service_zone.errors}">
+                <div *ngIf="submitted && f.service_zone.errors" class="invalid-feedback">
+                    <label *ngIf="f.service_zone.errors.required">
+                        Escribe la zona de servicio.
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-4">
+                <label>Teléfono</label>
+                <input type="text" class="form-control" formControlName="phone"
+                    [ngClass]="{'is-invalid':submitted && f.phone.errors}">
+                <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                    <label *ngIf="f.phone.errors.required">
+                        Escribe el número de teléfono.
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-8">
+                <label>Email</label>
                 <input type="text" class="form-control" formControlName="email"
                     [ngClass]="{'is-invalid':submitted && f.email.errors}">
                 <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <p *ngIf="f.email.errors.required">
+                    <label *ngIf="f.email.errors.required">
                         Escribe el email.
-                    </p>
+                    </label>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <p>Dirección</p>
-            <input type="text" class="form-control" formControlName="address"
-                [ngClass]="{'is-invalid':submitted && f.address.errors}">
-            <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
-                <p *ngIf="f.address.errors.required">
-                    Escribe la dirección exacta.
-                </p>
+
+        </div>
+
+
+        <div class="form-row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="w-100 border border-dark">
+                    <div class="osm-map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
+                        (leafletClick)="onClickMap($event)" >
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="form-row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 form-group">
+                        <label>Latitud</label>
+                        <input type="text" class="form-control" formControlName="lat"
+                            [ngClass]="{'is-invalid':submitted && f.lat.errors}" disabled>
+                        <div *ngIf="submitted && f.lat.errors" class="invalid-feedback">
+                            <label *ngIf="f.lat.errors.required">
+                                Escribe la latitud.
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 form-group">
+                        <label>Longitud</label>
+                        <input type="text" class="form-control" formControlName="lng"
+                            [ngClass]="{'is-invalid':submitted && f.lng.errors}" disabled>
+                        <div *ngIf="submitted && f.lng.errors" class="invalid-feedback">
+                            <label *ngIf="f.lng.errors.required">
+                                Escribe la longitud.
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 form-group">
+                        <label>Dirección</label>
+                        <input type="text" class="form-control" formControlName="address"
+                            [ngClass]="{'is-invalid':submitted && f.address.errors}">
+                        <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                            <label *ngIf="f.address.errors.required">
+                                Escribe la dirección exacta.
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="form-row">
+            <div class="col-12">
+
+            </div>
+
             <div class="form-group col-6">
-                <p>Latitud</p>
-                <input type="text" class="form-control" formControlName="lat"
-                    [ngClass]="{'is-invalid':submitted && f.lat.errors}">
-                <div *ngIf="submitted && f.lat.errors" class="invalid-feedback">
-                    <p *ngIf="f.lat.errors.required">
-                        Escribe la latitud.
-                    </p>
-                </div>
+
             </div>
             <div class="form-group col-6">
-                <p>Longitud</p>
-                <input type="text" class="form-control" formControlName="lng"
-                    [ngClass]="{'is-invalid':submitted && f.lng.errors}">
-                <div *ngIf="submitted && f.lng.errors" class="invalid-feedback">
-                    <p *ngIf="f.lng.errors.required">
-                        Escribe la longitud.
-                    </p>
-                </div>
+
             </div>
         </div>
         <p>Horario de atención</p>
         <div class="form-row">
-            <div class="form-group col-6">
-                <p>Desde</p>
-                <input type="text" class="form-control" formControlName="start_time"
-                    [ngClass]="{'is-invalid':submitted && f.start_time.errors}">
-                <div *ngIf="submitted && f.start_time.errors" class="invalid-feedback">
-                    <p *ngIf="f.start_time.errors.required">
-                        Escribe la hora inicial de atención
-                    </p>
+            <div class="form-group col-3">
+                <label>Desde</label>
+
+                <div>
+                    <ngb-timepicker [(ngModel)]="sTime" formControlName="start_time">
+                    </ngb-timepicker>
                 </div>
+
             </div>
-            <div class="form-group col-6">
-                <p>Hasta</p>
-                <input type="text" class="form-control" formControlName="end_time"
-                    [ngClass]="{'is-invalid':submitted && f.end_time.errors}">
-                <div *ngIf="submitted && f.end_time.errors" class="invalid-feedback">
-                    <p *ngIf="f.end_time.errors.required">
-                        Escribe la hora final de atención.
-                    </p>
+            <div class="form-group col-3">
+                <label>Hasta</label>
+                <div>
+                    <ngb-timepicker [(ngModel)]="eTime" formControlName="end_time">
+                    </ngb-timepicker>
                 </div>
+
             </div>
         </div>
-        <button class="btn btn-primary mb-2">Guardar Cambios</button>
+        <button class="btn btn-primary mb-2">{{edit ? 'Guardar Cambios' : 'Crear Empresa'}} </button>
     </form>
 </div>

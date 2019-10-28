@@ -1,6 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompanyService } from 'src/app/services/company.service';
+import { Alert } from 'src/app/models/alert';
+
+
+const NOCOMPANIES: Alert = {
+  type: 'info',
+  message: 'No hay compañías creadas.'
+};
+
+const DELETE: Alert = {
+  type: 'info',
+  message: 'Compañía eliminada.'
+};
+
+const CREATEDCOMPANY: Alert = {
+  type: 'info',
+  message: 'Compañía creada!'
+};
 
 @Component({
   selector: 'app-company',
@@ -9,24 +26,59 @@ import { CompanyService } from 'src/app/services/company.service';
 })
 export class CompanyComponent implements OnInit {
 
-  companies:any[];
+  companies: any[];
+  noCompanies: Alert;
+  delete: Alert;
+  createCompany: Alert;
 
-  constructor(private router:Router, private company:CompanyService) { }
+
+  constructor(private router: Router, private company: CompanyService) { }
 
   ngOnInit() {
+    if (localStorage.getItem('company_created') != null) {
+      this.resetCreatedCompany();
+      localStorage.removeItem('company_created');
+    }
     this.getCompanies();
   }
 
-  getCompanies(){
+  closeNoCompanies() {
+    this.noCompanies = undefined;
+  }
+
+  resetNoCompanies() {
+    this.noCompanies = NOCOMPANIES;
+  }
+
+  closeDelete() {
+    this.delete = undefined;
+  }
+
+  resetDelete() {
+    this.delete = DELETE;
+  }
+
+  closeCreatedCompany() {
+    this.createCompany = undefined;
+  }
+
+  resetCreatedCompany() {
+    this.createCompany = CREATEDCOMPANY;
+  }
+
+
+  getCompanies() {
     this.company.getCompanies().subscribe(
       res => {
         let r: any = res;
-        if(r.success){
+        if (r.success) {
           this.companies = r.data;
-        }else{
+          this.closeNoCompanies();
+        } else {
           //no existe
+          this.resetNoCompanies();
           console.log('No existe.');
-          this.companies=[];
+          this.companies = [];
         }
       },
       err => {
@@ -36,17 +88,18 @@ export class CompanyComponent implements OnInit {
     );
   }
 
-  editCompany(c){
+  editCompany(c) {
     this.router.navigate(['/', 'editar-empresa', `${c.value}`]);
   }
 
-  deleteCompany(c){
+  deleteCompany(c) {
     this.company.deleteCompany(c.value).subscribe(
       res => {
         let r: any = res;
-        if(r.success){
+        if (r.success) {
+          this.resetDelete();
           this.getCompanies();
-        }else{
+        } else {
           //no se pudo eliminar
           console.log('Error con laravel.');
         }

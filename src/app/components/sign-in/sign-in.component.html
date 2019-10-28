@@ -6,6 +6,11 @@
                 <ngb-alert [type]="signInFail.type" (close)="closeSignInFail()">{{ signInFail.message }}</ngb-alert>
             </p>
 
+            <p *ngIf="signUpSuccess">
+                <ngb-alert [type]="signUpSuccess.type" (close)="closeSignUpSuccess()">{{ signUpSuccess.message }}
+                </ngb-alert>
+            </p>
+
             <div class="card">
                 <div class="card-body">
                     <form [formGroup]="inForm" (ngSubmit)="submit()">

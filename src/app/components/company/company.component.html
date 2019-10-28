@@ -1,7 +1,17 @@
 <div class="container">
+
+    <p *ngIf="createCompany">
+        <ngb-alert [type]="createCompany.type" (close)="closeCreatedCompany()">{{ createCompany.message }}</ngb-alert>
+    </p>
+    <p *ngIf="delete">
+        <ngb-alert [type]="delete.type" (close)="closeDelete()">{{ delete.message }}</ngb-alert>
+    </p>
     <p>
         ¿No encuentras una empresa?<button [routerLink]="['/','nueva-empresa']" type="button"
             class="btn btn-outline-primary ml-2">Crea una nueva</button>
+    </p>
+    <p *ngIf="noCompanies">
+        <ngb-alert [type]="noCompanies.type" (close)="closeNoCompanies()">{{ noCompanies.message }}</ngb-alert>
     </p>
     <ng-template ngFor let-c [ngForOf]="companies">
         <div class="card mb-2">

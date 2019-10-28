@@ -12,11 +12,15 @@ import { UserViewComponent } from './components/user-view/user-view.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NavbarUserComponent } from './components/navbar-user/navbar-user.component'
 import { HttpClientModule } from '@angular/common/http'
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SignInService } from './services/sign-in.service';
 import { SignUpService } from './services/sign-up.service';
 import { CompanyComponent } from './components/company/company.component';
 import { CompanyFormComponent } from './components/company-form/company-form.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { CompanyService } from './services/company.service';
+import { RouteService } from './services/route.service';
+
 
 @NgModule({
   declarations: [
@@ -36,11 +40,14 @@ import { CompanyFormComponent } from './components/company-form/company-form.com
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    LeafletModule.forRoot()
   ],
   providers: [
     SignInService,
-    SignUpService
+    SignUpService,
+    CompanyService,
+    RouteService
   ],
   bootstrap: [AppComponent]
 })

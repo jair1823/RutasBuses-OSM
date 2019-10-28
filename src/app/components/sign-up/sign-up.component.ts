@@ -17,10 +17,10 @@ const SIGNUPFAIL: Alert = {
 export class SignUpComponent implements OnInit {
 
   inForm: FormGroup;
-  submitted:boolean=false;
-  signUpFail:Alert;
+  submitted: boolean = false;
+  signUpFail: Alert;
 
-  constructor(private formBuilder:FormBuilder, private router:Router, private signUp:SignUpService) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private signUp: SignUpService) { }
 
   closeSignUpFail() {
     this.signUpFail = undefined;
@@ -34,19 +34,19 @@ export class SignUpComponent implements OnInit {
     this.construirForm();
   }
 
-  construirForm(){
+  construirForm() {
     this.inForm = this.formBuilder.group({
-      name: ['',[Validators.required]],
-      last_name: ['',[Validators.required]],
-      second_last_name: ['',[Validators.required]],
-      username: ['',[Validators.required]],
-      password: ['',[Validators.required, Validators.minLength(4)]]
+      name: ['', [Validators.required]],
+      last_name: ['', [Validators.required]],
+      second_last_name: ['', [Validators.required]],
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(4)]]
     });
   }
 
-  submit(){
+  submit() {
     this.submitted = true;
-    if(this.inForm.invalid){
+    if (this.inForm.invalid) {
       return;
     }
     let data = {
@@ -58,10 +58,10 @@ export class SignUpComponent implements OnInit {
     }
     this.signUp.checkUnique(data).subscribe(
       res => {
-        let r:any = res;
-        if(r.success){
+        let r: any = res;
+        if (r.success) {
           this.saveUsername(data);
-        }else{
+        } else {
           this.throwSignUpFail();
         }
       },
@@ -72,17 +72,18 @@ export class SignUpComponent implements OnInit {
     );
   }
 
-  get f(){
+  get f() {
     return this.inForm.controls;
   }
 
-  saveUsername(data){
+  saveUsername(data) {
     this.signUp.register(data).subscribe(
       res => {
-        let r:any = res;
-        if(r.success){
+        let r: any = res;
+        if (r.success) {
+          localStorage.setItem('user_created', 'El usuario se creo correctamente');
           this.router.navigate(['iniciar-sesión']);
-        } else{
+        } else {
           console.log('Error con laravel. No se pudo registrar el usuario');
         }
       },

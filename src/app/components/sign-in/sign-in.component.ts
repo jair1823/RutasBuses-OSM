@@ -10,6 +10,11 @@ const SIGNINFAIL: Alert = {
   message: 'Credenciales incorrectas.'
 };
 
+const SIGNUPSUCCESS: Alert = {
+  type: 'success',
+  message: 'Usuario creado correctamente. Ingrese con sus credenciales :)'
+};
+
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -20,8 +25,9 @@ export class SignInComponent implements OnInit {
   inForm: FormGroup;
   submitted: boolean = false;
   signInFail: Alert;
+  signUpSuccess: Alert;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private signIn: SignInService) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private signIn: SignInService) { }
 
   closeSignInFail() {
     this.signInFail = undefined;
@@ -31,7 +37,20 @@ export class SignInComponent implements OnInit {
     this.signInFail = SIGNINFAIL;
   }
 
+  closeSignUpSuccess() {
+    this.signUpSuccess = undefined;
+  }
+
+  resetSignUpSuccess() {
+    this.signUpSuccess = SIGNUPSUCCESS;
+  }
+
   ngOnInit() {
+    if (localStorage.getItem('user_created') != null) {
+      this.resetSignUpSuccess();
+      localStorage.removeItem('user_created');
+    }
+
     this.construirForm();
   }
 
