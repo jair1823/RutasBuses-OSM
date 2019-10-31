@@ -7,10 +7,18 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto font-weight-normal">
             <li class="nav-item">
-                <a class="nav-link" [routerLink]="['/','mapea']" routerLinkActive="active">Editar mapa</a>
+                <a class="nav-link" [routerLink]="['/','inicio']" routerLinkActive="active">Ver mapa</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" [routerLink]="['/','empresas']" routerLinkActive="active">Empresas</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/','rutas']" routerLinkActive="active">Rutas</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/','configuración']" routerLinkActive="active">Configuración</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" (click)="logOut()" [routerLink]="['/']">Salir</a>

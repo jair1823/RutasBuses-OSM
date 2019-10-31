@@ -25,6 +25,6 @@ export class SignInService {
   }
 
   removeLocal() {
-    localStorage.clear();
+    localStorage.removeItem('user');
   }
 }

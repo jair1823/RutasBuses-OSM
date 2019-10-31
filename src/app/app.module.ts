@@ -8,7 +8,6 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GuestViewComponent } from './components/guest-view/guest-view.component';
-import { UserViewComponent } from './components/user-view/user-view.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NavbarUserComponent } from './components/navbar-user/navbar-user.component'
 import { HttpClientModule } from '@angular/common/http'
@@ -20,6 +19,10 @@ import { CompanyFormComponent } from './components/company-form/company-form.com
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { CompanyService } from './services/company.service';
 import { RouteService } from './services/route.service';
+import { RouteComponent } from './components/route/route.component';
+import { RouteFormComponent } from './components/route-form/route-form.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { ChangePasswordService } from './services/change-password.service';
 
 
 @NgModule({
@@ -28,11 +31,13 @@ import { RouteService } from './services/route.service';
     SignInComponent,
     SignUpComponent,
     GuestViewComponent,
-    UserViewComponent,
     NavbarComponent,
     NavbarUserComponent,
     CompanyComponent,
-    CompanyFormComponent
+    CompanyFormComponent,
+    RouteComponent,
+    RouteFormComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,8 @@ import { RouteService } from './services/route.service';
     SignInService,
     SignUpService,
     CompanyService,
-    RouteService
+    RouteService,
+    ChangePasswordService
   ],
   bootstrap: [AppComponent]
 })
