@@ -3,10 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { GuestViewComponent } from './components/guest-view/guest-view.component';
-import { UserViewComponent } from './components/user-view/user-view.component';
 import { UserAuthenticateGuard } from './guards/user-authenticate.guard';
 import { CompanyComponent } from './components/company/company.component';
 import { CompanyFormComponent } from './components/company-form/company-form.component';
+import { RouteComponent } from './components/route/route.component';
+import { RouteFormComponent } from './components/route-form/route-form.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 
 const routes: Routes = [
@@ -29,8 +31,18 @@ const routes: Routes = [
     component: SignUpComponent
   },
   {
-    path: 'mapea',
-    component: UserViewComponent,
+    path: 'rutas',
+    component: RouteComponent,
+    canActivate: [UserAuthenticateGuard]
+  },
+  {
+    path: 'nueva-ruta',
+    component: RouteFormComponent,
+    canActivate: [UserAuthenticateGuard]
+  },
+  {
+    path: 'editar-ruta/:id_route',
+    component: RouteFormComponent,
     canActivate: [UserAuthenticateGuard]
   },
   {
@@ -47,6 +59,12 @@ const routes: Routes = [
     path: 'nueva-empresa',
     component: CompanyFormComponent,
     canActivate: [UserAuthenticateGuard]
+  },
+  {
+    path: 'configuración',
+    component: ChangePasswordComponent,
+    canActivate: [UserAuthenticateGuard]
+
   },
   {
     path: '**',

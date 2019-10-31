@@ -1,8 +1,4 @@
 <div class="container-fluid">
-
-    <!-- <div class="osm-map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)">
-    </div> -->
-
     <div class="row">
         <div class="col-7">
             <div class="osm-map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
@@ -29,7 +25,7 @@
         </div>
 
         <div class="col-5">
-            <form [formGroup]="routeForm" (ngSubmit)="createRoute()">
+            <form [formGroup]="routeForm" (ngSubmit)="submit()">
                 <div class="form-row">
 
                     <div class="col-5 form-group">
@@ -51,7 +47,7 @@
                         <label>Descripción</label>
                         <textarea rows="3" class="form-control" formControlName="description"
                             [ngClass]="{'is-invalid':submitted && f.description.errors}">
-                        </textarea>
+                            </textarea>
                     </div>
 
                     <label class="col-12">Horario de atención</label>
@@ -155,8 +151,14 @@
 
                 </div>
 
-                <button class="btn btn-primary">Crear</button>
+                <button class="btn btn-primary">{{edit ? 'Guardar Cambios' : 'Crear Ruta'}}</button>
+                <a class="btn btn-secondary ml-2" [routerLink]="[ '/rutas']">Volver</a>
             </form>
+            <br>
+            <p *ngIf="updated">
+                <ngb-alert [type]="updated.type" (close)="closeUpdated()">{{ updated.message }}
+                </ngb-alert>
+            </p>
         </div>
     </div>
 </div>

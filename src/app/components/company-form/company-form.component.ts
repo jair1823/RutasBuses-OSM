@@ -3,6 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { CompanyService } from 'src/app/services/company.service';
 import { Map, tileLayer, latLng, LatLng, Routing, marker } from 'leaflet';
+import { Alert } from '../../models/alert';
+
+const UPDATED:Alert = {
+  type: 'success', message: 'Compañía actualizada.'
+}
 
 @Component({
   selector: 'app-company-form',
@@ -19,6 +24,7 @@ export class CompanyFormComponent implements OnInit {
   sTime = { hour: 12, minute: 0 };
   eTime = { hour: 12, minute: 0 };
 
+  updated:Alert;
 
   map: Map;
 
@@ -119,7 +125,8 @@ export class CompanyFormComponent implements OnInit {
           let r: any = res;
           if (r.success) {
             //alerta se guardó correctamente
-            this.router.navigate(['empresas']);
+            //this.router.navigate(['empresas']);
+            this.resetUpdated();
           } else {
             //no se pudo guardar
             console.log('No existe.');
@@ -178,6 +185,14 @@ export class CompanyFormComponent implements OnInit {
       lng: map.latlng.lng.toFixed(8)
     });
 
+  }
+
+  closeUpdated(){
+    this.updated = undefined;
+  }
+
+  resetUpdated(){
+    this.updated = UPDATED;
   }
 
 }

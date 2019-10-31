@@ -55,7 +55,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                 <div class="w-100 border border-dark">
                     <div class="osm-map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
-                        (leafletClick)="onClickMap($event)" >
+                        (leafletClick)="onClickMap($event)">
                     </div>
                 </div>
 
@@ -126,9 +126,17 @@
                     <ngb-timepicker [(ngModel)]="eTime" formControlName="end_time">
                     </ngb-timepicker>
                 </div>
-
+            </div>
+            <div class="col-6">
+                <br>
+                <br>
+                <p *ngIf="updated">
+                    <ngb-alert [type]="updated.type" (close)="closeUpdated()">{{ updated.message }}
+                    </ngb-alert>
+                </p>
             </div>
         </div>
-        <button class="btn btn-primary mb-2">{{edit ? 'Guardar Cambios' : 'Crear Empresa'}} </button>
+        <button type="submit" class="btn btn-primary">{{edit ? 'Guardar Cambios' : 'Crear Empresa'}} </button>
+        <a class="btn btn-secondary ml-2" [routerLink]="[ '/empresas']" >Volver</a>
     </form>
 </div>

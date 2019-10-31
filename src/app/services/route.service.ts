@@ -31,4 +31,24 @@ export class RouteService {
     return this.http.post('http://localhost:8000/api/point', data);
   }
 
+  getRoutes() {
+    return this.http.get(`http://localhost:8000/api/route`);
+  }
+
+  getRoute(id) {
+    return this.http.get(`http://localhost:8000/api/route/${id}`);
+  }
+
+  deletePoints(id) {
+    return this.http.delete(`http://localhost:8000/api/point/${id}`);
+  }
+
+  deleteRoute(id) {
+    return this.http.delete(`http://localhost:8000/api/route/${id}`);
+  }
+
+  updateRoute(id,data){
+    return this.http.put(`http://localhost:8000/api/route/${id}`,data);
+  }
+
 }
