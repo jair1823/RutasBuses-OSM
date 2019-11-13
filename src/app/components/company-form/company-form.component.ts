@@ -5,7 +5,7 @@ import { CompanyService } from 'src/app/services/company.service';
 import { Map, tileLayer, latLng, LatLng, Routing, marker } from 'leaflet';
 import { Alert } from '../../models/alert';
 
-const UPDATED:Alert = {
+const UPDATED: Alert = {
   type: 'success', message: 'Compañía actualizada.'
 }
 
@@ -24,7 +24,7 @@ export class CompanyFormComponent implements OnInit {
   sTime = { hour: 12, minute: 0 };
   eTime = { hour: 12, minute: 0 };
 
-  updated:Alert;
+  updated: Alert;
 
   map: Map;
 
@@ -37,8 +37,7 @@ export class CompanyFormComponent implements OnInit {
         attribution: '<a href="https://www.openstreetmap.org/">OpenStreetMap</a>|<a href="https://www.liedman.net/leaflet-routing-machine/">Routeing Machine</a>'
       })
     ],
-    zoom: 8,
-    center: latLng(9.930976812881799, -84.0886688232422)
+    zoom: 14,
   };
 
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router, private company: CompanyService) { }
@@ -167,11 +166,16 @@ export class CompanyFormComponent implements OnInit {
     if (this.edit) {
       this.m = marker([this.inForm.value.lat, this.inForm.value.lng]).addTo(map);
     } else {
-      this.m = marker([9.930976812881799, -84.0886688232422]).addTo(map);
-      this.inForm.patchValue({
-        lat: 9.93097681,
-        lng: -84.08866882
-      });
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.map.setView([pos.coords.latitude, pos.coords.longitude], 17);
+        this.m = marker([pos.coords.latitude, pos.coords.longitude]).addTo(map);
+        this.inForm.patchValue({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        });
+        
+      })
+
     }
 
   }
@@ -187,11 +191,11 @@ export class CompanyFormComponent implements OnInit {
 
   }
 
-  closeUpdated(){
+  closeUpdated() {
     this.updated = undefined;
   }
 
-  resetUpdated(){
+  resetUpdated() {
     this.updated = UPDATED;
   }
 

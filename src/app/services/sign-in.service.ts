@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-
+import { api } from "./url.api";
 @Injectable({
   providedIn: 'root'
 })
@@ -9,7 +9,7 @@ export class SignInService {
   constructor(private http: HttpClient) { }
 
   authenticate(data) {
-    return this.http.post('http://localhost:8000/api/user/authenticate', data);
+    return this.http.post(`${api}/user/authenticate`, data);
   }
 
   saveLocal(data) {

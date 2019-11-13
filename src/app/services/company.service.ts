@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { api } from "./url.api";
 @Injectable({
   providedIn: 'root'
 })
@@ -9,22 +9,22 @@ export class CompanyService {
   constructor(private http:HttpClient) { }
 
   save(data) {
-    return this.http.post('http://localhost:8000/api/company',data);
+    return this.http.post(`${api}/company`,data);
   }
 
   getCompany(id){
-    return this.http.get(`http://localhost:8000/api/company/${id}`);
+    return this.http.get(`${api}/company/${id}`);
   }
 
   getCompanies(){
-    return this.http.get('http://localhost:8000/api/company');
+    return this.http.get(`${api}/company`);
   }
 
   deleteCompany(id){
-    return this.http.delete(`http://localhost:8000/api/company/${id}`);
+    return this.http.delete(`${api}/company/${id}`);
   }
 
   updateCompany(id,data){
-    return this.http.put(`http://localhost:8000/api/company/${id}`,data);
+    return this.http.put(`${api}/company/${id}`,data);
   }
 }

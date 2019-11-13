@@ -8,7 +8,7 @@ import { RouteService } from 'src/app/services/route.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Alert } from '../../models/alert';
 
-const UPDATED:Alert = {
+const UPDATED: Alert = {
   type: 'success', message: 'Ruta actualizada.'
 }
 
@@ -19,7 +19,7 @@ const UPDATED:Alert = {
 })
 export class RouteFormComponent implements OnInit {
 
-  updated:Alert;
+  updated: Alert;
 
   routeForm: FormGroup;
   submitted: boolean = false;
@@ -53,7 +53,7 @@ export class RouteFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private routeService: RouteService,
     private activateRoute: ActivatedRoute,
-    private router:Router
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -126,7 +126,6 @@ export class RouteFormComponent implements OnInit {
       this.contador++;
       this.messages.push(marker);
       this.points.push(latLng(point.lat, point.lng));
-      this.contador++;
     }
     this.route.setWaypoints(this.points);
   }
@@ -349,7 +348,7 @@ export class RouteFormComponent implements OnInit {
         let r: any = res;
         if (r.success) {
           this.createPoints(r.data);
-          localStorage.setItem('created_route','true');
+          localStorage.setItem('created_route', 'true');
           this.router.navigate(['/rutas']);
         } else {
           console.log('no se pudo crear')
@@ -479,6 +478,10 @@ export class RouteFormComponent implements OnInit {
   onMapReady(map: Map): void {
     this.map = map;
     this.route.addTo(this.map);
+    navigator.geolocation.getCurrentPosition(pos => {
+      console.log(pos.coords);
+      this.map.setView([pos.coords.latitude, pos.coords.longitude], 17);
+    })
   }
 
   onClickMap(map: Map) {
@@ -625,11 +628,11 @@ export class RouteFormComponent implements OnInit {
     );
   }
 
-  closeUpdated(){
+  closeUpdated() {
     this.updated = undefined;
   }
 
-  resetUpdated(){
+  resetUpdated() {
     this.updated = UPDATED;
   }
 

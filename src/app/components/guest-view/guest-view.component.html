@@ -1,6 +1,56 @@
 <div class="container-fluid">
-    <div class="osm-map" leaflet [leafletOptions]="options">
+    <div class="row">
+        <div class="col-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <!-- (change)="getCanton(true)" -->
+                        <select class="form-control" [(ngModel)]="query" (change)="preparing()">
+                            <option [ngValue]="0" disabled>Tipo De Consulta</option>
+                            <option [ngValue]="1">Rutas por empresa</option>
+                            <option [ngValue]="2">Ruta específica</option>
+                            <option [ngValue]="3">Ruta por destino</option>
+                            <option [ngValue]="4">Ruta por parada común</option>
+                        </select>
+                    </div>
+
+
+
+                    <div *ngIf="query === 1">
+                        <div class="form-group">
+                            <label>Compañía</label>
+                            <select class="form-control" [(ngModel)]="selectedCompany" (change)="selectCompany()">
+                                <option [ngValue]="null" disabled>Seleccione</option>
+                                <option *ngFor="let c of companies" [ngValue]="c">{{c.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="query === 2">
+                        <div class="form-group">
+                            <label>Numero de ruta</label>
+                            <select class="form-control" [(ngModel)]="selectedRoute" (change)="selectRoute()">
+                                <option [ngValue]="null" disabled>Seleccione</option>
+                                <option *ngFor="let c of allRoutes" [ngValue]="c">Ruta #{{c.number}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="query === 3">
+                        query 3
+                    </div>
+                    <div *ngIf="query === 4">
+                        query 4
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-9">
+            <div class="osm-map" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="options">
+            </div>
+        </div>
     </div>
-    <br><br>
-    <h1>Zona de consultas</h1>
+
+
 </div>

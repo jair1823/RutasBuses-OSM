@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Map, tileLayer, latLng, Routing, marker } from 'leaflet';
+import 'leaflet-routing-machine';
+import { CompanyService } from 'src/app/services/company.service';
+import { RouteService } from 'src/app/services/route.service';
 @Component({
   selector: 'app-guest-view',
   templateUrl: './guest-view.component.html',
@@ -8,11 +11,35 @@ import { Map, tileLayer, latLng, Routing, marker } from 'leaflet';
 export class GuestViewComponent implements OnInit {
 
   options;
+  map: Map;
+
+  routesInfo: any[] = [];//informacion de la ruta
+  routes: any[] = [];//route control para cada routa
 
 
-  constructor() { }
+  colors = [
+    'green',
+    'red',
+    'blue',
+    'purple',
+    'pink',
+    'yellow'
+  ]
+
+  query: number = 0;
+
+  companies: any[];
+
+  selectedCompany: any = null;
+
+
+  allRoutes: any[];
+  selectedRoute: any = null;
+
+  constructor(private company: CompanyService, private routeService: RouteService) { }
 
   ngOnInit() {
+    console.log(7 % 8)
     this.options = {
       layers: [
         tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -25,6 +52,202 @@ export class GuestViewComponent implements OnInit {
       zoom: 17,
       center: latLng(9.932465, -84.049161)
     }
+  }
+
+  onMapReady(map) {
+    this.map = map;
+    console.log(map);
+    navigator.geolocation.getCurrentPosition(pos => {
+      console.log(pos.coords);
+      this.map.setView([pos.coords.latitude, pos.coords.longitude], 17);
+    })
+  }
+  preparing() {
+    switch (this.query) {
+      case 1:
+        this.companyQuery();
+        break;
+      case 2:
+        this.routeQuery();
+        break;
+      case 3:
+        console.log("consulta 3");
+        break;
+      case 4:
+        console.log("consulta 4");
+        break;
+      default:
+        console.log("nel");
+        break;
+    }
+  }
+
+
+  companyQuery() {
+    this.selectedCompany = null;
+    this.company.getCompanies().subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.companies = r.data;
+          //this.closeNoCompanies();
+        } else {
+          //no existe
+          //this.resetNoCompanies();
+          console.log('No existe.');
+          this.companies = [];
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('Error con laravel.');
+      }
+    );
+  }
+  selectCompany() {
+    this.refreshMap();
+    this.routeService.getroutesByCompany(this.selectedCompany.id_company).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.routesInfo = r.data;
+          this.getRoutePoints();
+        } else {
+          this.routesInfo = [];
+          console.log('no routes')
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.routesInfo = [];
+      }
+    );
+  }
+
+  routeQuery() {
+    this.selectedRoute = null;
+    this.routeService.getRoutes().subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.allRoutes = r.data;
+          console.log(r.data)
+          //this.closeNoCompanies();
+        } else {
+          //no existe
+          //this.resetNoCompanies();
+          console.log('No hay rutas.');
+          this.allRoutes = [];
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('Error con laravel.');
+        this.allRoutes = [];
+      }
+    )
+  }
+
+  selectRoute() {
+    this.refreshMap();
+    this.routeService.getRoute(this.selectedRoute.id_route).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.routesInfo = r.data;
+          this.getRoutePoints();
+        } else {
+          this.routesInfo = [];
+          console.log('no routes')
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.routesInfo = [];
+      }
+    )
+  }
+
+  /**
+   * despues de cargar routesInfo
+   * esta funcion obtiene los puntos de cada ruta.
+   */
+  getRoutePoints() {
+    for (let index = 0; index < this.routesInfo.length; index++) {
+      const r = this.routesInfo[index];
+      this.routeService.getPoints(r.id_route).subscribe(
+        res => {
+          let r: any = res;
+          if (r.success) {
+            this.createRouteControl(r.data, index);
+            var top = document.getElementsByClassName("leaflet-top leaflet-right");
+            while (top[0].firstChild) {
+              console.log('entre')
+              top[0].removeChild(top[0].firstChild);
+            }
+          } else {
+            console.log('no points');
+          }
+        },
+        err => {
+          console.log(err);
+          console.log('error con laravel');
+        }
+      );
+    }
+
+  }
+
+  /**
+   * 
+   * @param p puntos de la ruta
+   * @param c index de la ruta que dibujo
+   * crea una router control y lo agrega al mapa
+   */
+  createRouteControl(p, c) {
+    let messages = [];
+    let points = [];
+    let contador = 0;
+    for (let index = 0; index < p.length; index++) {
+      const point = p[index];
+      let marker = {
+        id: contador,
+        me: point.description
+      }
+      contador++;
+      messages.push(marker);
+      points.push(latLng(point.lat, point.lng));
+      contador++;
+    }
+    let r = Routing.control({
+      draggableWaypoints: false,
+      addWaypoints: false,
+      messages: messages,
+      waypoints: points,
+      show: false,
+      lineOptions: {
+        styles: [{ color: this.colors[c % this.colors.length] }]
+      },
+      createMarker: function (i, wp) {
+        return marker(wp.latLng).bindPopup(`${this.messages[i].me}`);
+      }
+    });
+    this.map.addControl(r);
+    this.routes.push(r);
+
+
+  }
+
+  //quita la rutas y pone arreglos en 0;
+  refreshMap() {
+    for (let index = 0; index < this.routes.length; index++) {
+      const r = this.routes[index];
+      this.map.removeControl(r);
+    }
+    this.routes = [];
+    this.routesInfo = [];
   }
 
 }
