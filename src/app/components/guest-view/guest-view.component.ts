@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Map, tileLayer, latLng, Routing, marker } from 'leaflet';
+import { Map, tileLayer, latLng, Routing, marker, circle } from 'leaflet';
 import 'leaflet-routing-machine';
 import { CompanyService } from 'src/app/services/company.service';
 import { RouteService } from 'src/app/services/route.service';
@@ -28,13 +28,26 @@ export class GuestViewComponent implements OnInit {
 
   query: number = 0;
 
-  companies: any[];
 
+  companies: any[] = [];
   selectedCompany: any = null;
 
-
-  allRoutes: any[];
+  allRoutes: any[] = [];
   selectedRoute: any = null;
+
+
+
+  provinces: any[] = [];
+  cantones: any[] = [];
+  districs: any[] = [];
+  selectedProvince: any = null;
+  selectedCanton: any = null;
+  selectedDistric: any = null;
+
+
+  accessClick: boolean = false;
+  circle;
+  routeForWrite = [];
 
   constructor(private company: CompanyService, private routeService: RouteService) { }
 
@@ -63,6 +76,10 @@ export class GuestViewComponent implements OnInit {
     })
   }
   preparing() {
+    if (this.circle) {
+      this.map.removeLayer(this.circle);
+    }
+    this.accessClick = false;
     switch (this.query) {
       case 1:
         this.companyQuery();
@@ -71,15 +88,95 @@ export class GuestViewComponent implements OnInit {
         this.routeQuery();
         break;
       case 3:
-        console.log("consulta 3");
+        this.districQuery();
         break;
       case 4:
-        console.log("consulta 4");
+        this.stopQuery();
         break;
       default:
         console.log("nel");
         break;
     }
+  }
+
+
+  stopQuery() {
+    this.accessClick = true;
+  }
+
+  onClickMap(e) {
+    this.refreshMap();
+    if (!this.accessClick) {
+      return;
+    }
+    if (this.circle) {
+      this.map.removeLayer(this.circle);
+    }
+    this.circle = circle([e.latlng.lat, e.latlng.lng], {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.5,
+      radius: 40
+    });
+    this.map.addLayer(this.circle);
+
+    this.routeService.getAllPoints().subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.samePosition(r.data);
+        } else {
+          console.log('No hay puntos');
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('Error con laravel.');
+      }
+    )
+
+    console.log(this.circle);
+    //console.log(latLng(map.latlng.lat, map.latlng.lng));
+  }
+
+
+  samePosition(r) {
+    
+    for (let index = 0; index < r.length; index++) {
+      const p = r[index];
+
+      var distance = this.map.distance([p.lat, p.lng], this.circle.getLatLng())
+      var isInside = distance <= this.circle.getRadius();
+      if (isInside) {
+        var id_route = p.id_route;
+        if (!this.routeForWrite.includes(id_route)) {
+          this.routeForWrite.push(id_route);
+        }
+      }
+
+
+    }
+    console.log(this.routeForWrite);
+    console.log('vamos')
+    let data = {
+      ids: this.routeForWrite
+    }
+    this.routeService.getRoutesByIds(data).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          console.log(r.data);
+          this.routesInfo = r.data;
+          this.getRoutePoints();
+        } else {
+          console.log('No hay puntos');
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('Error con laravel.');
+      }
+    )
   }
 
 
@@ -106,7 +203,7 @@ export class GuestViewComponent implements OnInit {
   }
   selectCompany() {
     this.refreshMap();
-    this.routeService.getroutesByCompany(this.selectedCompany.id_company).subscribe(
+    this.routeService.getRoutesByCompany(this.selectedCompany.id_company).subscribe(
       res => {
         let r: any = res;
         if (r.success) {
@@ -168,6 +265,91 @@ export class GuestViewComponent implements OnInit {
         this.routesInfo = [];
       }
     )
+  }
+
+
+  districQuery() {
+    this.selectedProvince = null;
+    this.selectedCanton = null;
+    this.selectedDistric = null;
+    this.routeService.getProvince().subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.provinces = r.data;
+        } else {
+          this.provinces = [];
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.provinces = [];
+      }
+    )
+  }
+
+  selectProvince() {
+    this.selectedCanton = null;
+    this.selectedDistric = null;
+    console.log();
+    this.routeService.getCantonByProvince(this.selectedProvince.id_province).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.cantones = r.data;
+        } else {
+          this.cantones = [];
+          console.log('No hay cantones');
+        }
+      },
+      err => {
+        this.cantones = [];
+        console.log(err);
+        console.log('Erro conexion');
+      }
+    )
+  }
+
+  selectCanton() {
+    this.selectedDistric = null;
+    this.routeService.getDistricByCanton(this.selectedCanton.id_canton).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.districs = r.data;
+        } else {
+          this.districs = [];
+          console.log('No hay distritos');
+        }
+      },
+      err => {
+        this.districs = [];
+        console.log(err);
+        console.log('Erro conexion');
+      }
+    );
+  }
+
+  selectDistric() {
+    this.refreshMap();
+    this.routeService.getRoutesByDistric(this.selectedDistric.id_distric).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.routesInfo = r.data;
+          this.getRoutePoints();
+        } else {
+          this.routesInfo = [];
+          console.log('no routes')
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.routesInfo = [];
+      }
+    );
   }
 
   /**
@@ -248,6 +430,7 @@ export class GuestViewComponent implements OnInit {
     }
     this.routes = [];
     this.routesInfo = [];
+    this.routeForWrite = [];
   }
 
 }

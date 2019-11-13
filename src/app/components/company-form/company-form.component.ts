@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { CompanyService } from 'src/app/services/company.service';
 import { Map, tileLayer, latLng, LatLng, Routing, marker } from 'leaflet';
 import { Alert } from '../../models/alert';
+import { SignInService } from 'src/app/services/sign-in.service';
 
 const UPDATED: Alert = {
   type: 'success', message: 'Compañía actualizada.'
@@ -40,7 +41,12 @@ export class CompanyFormComponent implements OnInit {
     zoom: 14,
   };
 
-  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router, private company: CompanyService) { }
+  constructor(private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private company: CompanyService,
+    private login: SignInService
+  ) { }
 
   ngOnInit() {
     this.construirForm();
@@ -123,8 +129,17 @@ export class CompanyFormComponent implements OnInit {
         res => {
           let r: any = res;
           if (r.success) {
-            //alerta se guardó correctamente
-            //this.router.navigate(['empresas']);
+
+            this.company.updateLog(this.login.getLocal().id_user, this.params).subscribe(
+              res => {
+                console.log(res);
+                console.log('listo.');
+              },
+              err => {
+                console.log(err);
+                console.log('Error con laravel.');
+              }
+            );
             this.resetUpdated();
           } else {
             //no se pudo guardar
@@ -142,6 +157,16 @@ export class CompanyFormComponent implements OnInit {
           let r: any = res;
           if (r.success) {
             //alerta se guardó correctamente
+            this.company.createLog(this.login.getLocal().id_user, r.data).subscribe(
+              res => {
+                console.log(res);
+                console.log('listo.');
+              },
+              err => {
+                console.log(err);
+                console.log('Error con laravel.');
+              }
+            );
             localStorage.setItem('company_created', 'true');
             this.router.navigate(['empresas']);
           } else {
@@ -173,7 +198,7 @@ export class CompanyFormComponent implements OnInit {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude
         });
-        
+
       })
 
     }

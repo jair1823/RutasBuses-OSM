@@ -52,11 +52,38 @@ export class RouteService {
     return this.http.put(`${api}/route/${id}`, data);
   }
 
-  getroutesByCompany(id) {
+  getRoutesByCompany(id) {
     return this.http.get(`${api}/route/by_company/${id}`);
+  }
+  getRoutesByDistric(id) {
+    return this.http.get(`${api}/route/by_destination/${id}`);
   }
 
   getPoints(id){
     return this.http.get(`${api}/point/${id}`);
   }
+  getAllPoints(){
+    return this.http.get(`${api}/point/`);
+  }
+
+  getRoutesByIds(data) {
+    return this.http.post(`${api}/route/many`, data);
+  }
+
+
+
+
+  createLog(id_user,id_route){
+    return this.http.get(`${api}/route_log/new/${id_user}/${id_route}`);
+  }
+
+  updateLog(id_user,id_route){
+    return this.http.get(`${api}/route_log/update/${id_user}/${id_route}`);
+  }
+
+  deleteLog(id_user,id_route){
+    return this.http.get(`${api}/route_log/delete/${id_user}/${id_route}`);
+  }
+
+  
 }

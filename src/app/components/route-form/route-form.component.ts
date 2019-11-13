@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RouteService } from 'src/app/services/route.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Alert } from '../../models/alert';
+import { SignInService } from 'src/app/services/sign-in.service';
 
 const UPDATED: Alert = {
   type: 'success', message: 'Ruta actualizada.'
@@ -53,7 +54,8 @@ export class RouteFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private routeService: RouteService,
     private activateRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private login: SignInService
   ) { }
 
   ngOnInit() {
@@ -347,6 +349,18 @@ export class RouteFormComponent implements OnInit {
       res => {
         let r: any = res;
         if (r.success) {
+
+          this.routeService.createLog(this.login.getLocal().id_user, r.data).subscribe(
+            res => {
+              console.log(res);
+              console.log('listo.');
+            },
+            err => {
+              console.log(err);
+              console.log('Error con laravel.');
+            }
+          );
+
           this.createPoints(r.data);
           localStorage.setItem('created_route', 'true');
           this.router.navigate(['/rutas']);
@@ -379,6 +393,18 @@ export class RouteFormComponent implements OnInit {
       res => {
         let r: any = res;
         if (r.success) {
+
+          this.routeService.updateLog(this.login.getLocal().id_user, this.params).subscribe(
+            res => {
+              console.log(res);
+              console.log('listo.');
+            },
+            err => {
+              console.log(err);
+              console.log('Error con laravel.');
+            }
+          );
+
           this.deletePoints();
         } else {
           alert('unupdated');
@@ -438,6 +464,7 @@ export class RouteFormComponent implements OnInit {
       }
       this.routeService.createPoint(data).subscribe(
         res => {
+
           console.log(res);
         }
       )

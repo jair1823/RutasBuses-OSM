@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompanyService } from 'src/app/services/company.service';
 import { Alert } from 'src/app/models/alert';
+import { SignInService } from 'src/app/services/sign-in.service';
 
 
 const NOCOMPANIES: Alert = {
@@ -32,7 +33,7 @@ export class CompanyComponent implements OnInit {
   createCompany: Alert;
 
 
-  constructor(private router: Router, private company: CompanyService) { }
+  constructor(private router: Router, private company: CompanyService, private login: SignInService) { }
 
   ngOnInit() {
     if (localStorage.getItem('company_created') != null) {
@@ -97,6 +98,18 @@ export class CompanyComponent implements OnInit {
       res => {
         let r: any = res;
         if (r.success) {
+
+          this.company.deleteLog(this.login.getLocal().id_user, c.value).subscribe(
+            res => {
+              console.log(res);
+              console.log('listo.');
+            },
+            err => {
+              console.log(err);
+              console.log('Error con laravel.');
+            }
+          );
+
           this.resetDelete();
           this.getCompanies();
         } else {
@@ -110,5 +123,5 @@ export class CompanyComponent implements OnInit {
       }
     );
   }
-  
+
 }

@@ -20,7 +20,7 @@ export class SignInService {
     return (localStorage.getItem('user') != null);
   }
 
-  getLocal() {
+  getLocal(): any {
     return JSON.parse(localStorage.getItem('user'));
   }
 
