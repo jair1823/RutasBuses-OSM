@@ -537,11 +537,14 @@ export class RouteFormComponent implements OnInit {
   }
 
   new_place(id) {
-    let e: any = document.getElementById(id);
 
+    let e: any = document.getElementById(id);
+    const p = this.points[id];
     let data = {
       id_user: JSON.parse(localStorage.getItem('user')).id_user,
-      description: e.value
+      description: e.value,
+      lat: p.lat,
+      lng: p.lng
     }
     this.routeService.createNewPlace(data).subscribe(
       res => {

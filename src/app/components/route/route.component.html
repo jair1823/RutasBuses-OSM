@@ -1,18 +1,29 @@
 <div class="container">
 
-    <p *ngIf="createdRoute">
-        <ngb-alert [type]="createdRoute.type" (close)="closeCreatedRoute()">{{ createdRoute.message }}</ngb-alert>
+    <p *ngIf="message">
+        <ngb-alert [type]="message.type" (close)="closeMessage()">{{ message.message }}</ngb-alert>
     </p>
-    <p *ngIf="deletedRoute">
-        <ngb-alert [type]="deletedRoute.type" (close)="closeDeleteRoute()">{{ deletedRoute.message }}</ngb-alert>
-    </p>
-    <p>
-        ¿No encuentras una ruta?<button [routerLink]="['/','nueva-ruta']" type="button"
-            class="btn btn-outline-primary ml-2">Crea una nueva</button>
-    </p>
-    <p *ngIf="noRoutes">
-        <ngb-alert [type]="noRoutes.type" (close)="closeNoRoutes()">{{ noRoutes.message }}</ngb-alert>
-    </p>
+
+    <div class="row">
+        <div class="col-10">
+            <p>
+                ¿No encuentras una ruta?<button [routerLink]="['/','nueva-ruta']" type="button"
+                    class="btn btn-outline-primary ml-2">Crea una nueva</button>
+            </p>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="DolarSwitch" checked=""
+                        (change)="dolares()">
+                    <label class="custom-control-label" for="DolarSwitch">Ver en dolares</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <ng-template ngFor let-r [ngForOf]="routes">
         <div class="card mb-2">
             <div class="card-body">
@@ -21,18 +32,28 @@
                 <div class=" d-inline">
                     <span class="font-weight-bold">Numero de ruta:</span> {{r.number}}
                 </div>
-                <div class="d-inline">
+                <div *ngIf="!bDolar" class="d-inline">
                     <span class="font-weight-bold">Costo:</span> ₡{{r.ticket_cost}}
+                </div>
+
+                <div *ngIf="bDolar" class="d-inline">
+                    <span class="font-weight-bold">Costo:</span> ${{conversion(r.ticket_cost)}}
                 </div>
 
                 <div class="d-block">
                     <span class="font-weight-bold">Compañia:</span> {{r.company_name}}
                 </div>
-                <div class="text-right">
+
+                <div *ngIf="r.status === 1" class="text-right">
                     <button [value]="r.id_route" [routerLink]="[ '/editar-ruta', r.id_route ]" type="button"
                         class="btn btn-primary">Detalles</button>
-                    <button (click)="deletePoints(r.id_route)" type="button"
+                    <button (click)="deleteRoute(r.id_route)" type="button"
                         class="btn btn-danger ml-2">Eliminar</button>
+                </div>
+
+                <div *ngIf="r.status === 0" class="text-right">
+                    <button (click)="restoreRoute(r.id_route)" type="button"
+                        class="btn btn-success ml-2">Recuperar</button>
                 </div>
 
             </div>

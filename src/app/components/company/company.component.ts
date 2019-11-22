@@ -15,6 +15,11 @@ const DELETE: Alert = {
   message: 'Compañía eliminada.'
 };
 
+const RESTORE: Alert = {
+  type: 'info',
+  message: 'Compañía recuperada.'
+};
+
 const CREATEDCOMPANY: Alert = {
   type: 'info',
   message: 'Compañía creada!'
@@ -32,6 +37,8 @@ export class CompanyComponent implements OnInit {
   delete: Alert;
   createCompany: Alert;
 
+  message: Alert;
+
 
   constructor(private router: Router, private company: CompanyService, private login: SignInService) { }
 
@@ -43,28 +50,21 @@ export class CompanyComponent implements OnInit {
     this.getCompanies();
   }
 
-  closeNoCompanies() {
-    this.noCompanies = undefined;
+  closeMessage() {
+    this.message = undefined;
   }
 
   resetNoCompanies() {
-    this.noCompanies = NOCOMPANIES;
+    this.message = NOCOMPANIES;
   }
-
-  closeDelete() {
-    this.delete = undefined;
-  }
-
   resetDelete() {
-    this.delete = DELETE;
+    this.message = DELETE;
   }
-
-  closeCreatedCompany() {
-    this.createCompany = undefined;
+  resetRestore() {
+    this.message = RESTORE;
   }
-
   resetCreatedCompany() {
-    this.createCompany = CREATEDCOMPANY;
+    this.message = CREATEDCOMPANY;
   }
 
 
@@ -74,7 +74,6 @@ export class CompanyComponent implements OnInit {
         let r: any = res;
         if (r.success) {
           this.companies = r.data;
-          this.closeNoCompanies();
         } else {
           //no existe
           this.resetNoCompanies();
@@ -94,12 +93,11 @@ export class CompanyComponent implements OnInit {
   }
 
   deleteCompany(c) {
-    this.company.deleteCompany(c.value).subscribe(
+    this.company.deleteCompany(c).subscribe(
       res => {
         let r: any = res;
         if (r.success) {
-
-          this.company.deleteLog(this.login.getLocal().id_user, c.value).subscribe(
+          this.company.deleteLog(this.login.getLocal().id_user, c).subscribe(
             res => {
               console.log(res);
               console.log('listo.');
@@ -122,6 +120,35 @@ export class CompanyComponent implements OnInit {
         console.log('Error con laravel.');
       }
     );
+  }
+
+  restoreCompany(c) {
+    this.company.restore(c).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.company.restoreLog(this.login.getLocal().id_user, c).subscribe(
+            res => {
+              console.log(res);
+              console.log('listo.');
+            },
+            err => {
+              console.log(err);
+              console.log('Error con laravel.');
+            }
+          );
+          this.resetRestore();
+          this.getCompanies();
+        } else {
+          //no se pudo eliminar
+          console.log('No se pudo recuperar.');
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('Error con laravel.');
+      }
+    )
   }
 
 }

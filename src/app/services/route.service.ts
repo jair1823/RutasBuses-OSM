@@ -36,6 +36,10 @@ export class RouteService {
     return this.http.get(`${api}/route`);
   }
 
+  getActiveRoutes() {
+    return this.http.get(`${api}/route/index/activas`);
+  }
+
   getRoute(id) {
     return this.http.get(`${api}/route/${id}`);
   }
@@ -46,6 +50,10 @@ export class RouteService {
 
   deleteRoute(id) {
     return this.http.delete(`${api}/route/${id}`);
+  }
+
+  restore(id) {
+    return this.http.get(`${api}/route/restore/${id}`);
   }
 
   updateRoute(id, data) {
@@ -59,10 +67,10 @@ export class RouteService {
     return this.http.get(`${api}/route/by_destination/${id}`);
   }
 
-  getPoints(id){
+  getPoints(id) {
     return this.http.get(`${api}/point/${id}`);
   }
-  getAllPoints(){
+  getAllPoints() {
     return this.http.get(`${api}/point/`);
   }
 
@@ -70,20 +78,26 @@ export class RouteService {
     return this.http.post(`${api}/route/many`, data);
   }
 
-
-
-
-  createLog(id_user,id_route){
+  createLog(id_user, id_route) {
     return this.http.get(`${api}/route_log/new/${id_user}/${id_route}`);
   }
 
-  updateLog(id_user,id_route){
+  updateLog(id_user, id_route) {
     return this.http.get(`${api}/route_log/update/${id_user}/${id_route}`);
   }
 
-  deleteLog(id_user,id_route){
+  deleteLog(id_user, id_route) {
     return this.http.get(`${api}/route_log/delete/${id_user}/${id_route}`);
   }
 
-  
+  restoreLog(id_user, id_route) {
+    return this.http.get(`${api}/route_log/restore/${id_user}/${id_route}`);
+  }
+
+
+  dolar() {
+    return this.http.get(`https://tipodecambio.paginasweb.cr/api`);
+  }
+
+
 }

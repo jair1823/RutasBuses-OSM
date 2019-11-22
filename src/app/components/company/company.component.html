@@ -1,17 +1,11 @@
 <div class="container">
 
-    <p *ngIf="createCompany">
-        <ngb-alert [type]="createCompany.type" (close)="closeCreatedCompany()">{{ createCompany.message }}</ngb-alert>
-    </p>
-    <p *ngIf="delete">
-        <ngb-alert [type]="delete.type" (close)="closeDelete()">{{ delete.message }}</ngb-alert>
+    <p *ngIf="message">
+        <ngb-alert [type]="message.type" (close)="closeMessage()">{{ message.message }}</ngb-alert>
     </p>
     <p>
         ¿No encuentras una ruta?<button [routerLink]="['/','nueva-empresa']" type="button"
             class="btn btn-outline-primary ml-2">Crea una nueva</button>
-    </p>
-    <p *ngIf="noCompanies">
-        <ngb-alert [type]="noCompanies.type" (close)="closeNoCompanies()">{{ noCompanies.message }}</ngb-alert>
     </p>
     <ng-template ngFor let-c [ngForOf]="companies">
         <div class="card mb-2">
@@ -21,13 +15,18 @@
                     Dirección: {{c.address}}<br>
                     Teléfono: {{c.phone}}
                 </p>
-                <div class="text-right">
+
+                <div *ngIf="c.status === 1" class="text-right">
                     <button [value]="c.id_company" (click)="editCompany($event.currentTarget)" type="button"
                         class="btn btn-primary">Detalles</button>
-                    <button [value]="c.id_company" (click)="deleteCompany($event.currentTarget)" type="button"
+                    <button [value]="c.id_company" (click)="deleteCompany(c.id_company)" type="button"
                         class="btn btn-danger ml-2">Eliminar</button>
                 </div>
 
+                <div *ngIf="c.status === 0" class="text-right">
+                    <button [value]="c.id_company" (click)="restoreCompany(c.id_company)" type="button"
+                    class="btn btn-success ml-2">Recuperar</button>
+                </div>
             </div>
         </div>
     </ng-template>

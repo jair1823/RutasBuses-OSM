@@ -182,7 +182,7 @@ export class GuestViewComponent implements OnInit {
 
   companyQuery() {
     this.selectedCompany = null;
-    this.company.getCompanies().subscribe(
+    this.company.getCompaniesActive().subscribe(
       res => {
         let r: any = res;
         if (r.success) {
@@ -224,7 +224,7 @@ export class GuestViewComponent implements OnInit {
 
   routeQuery() {
     this.selectedRoute = null;
-    this.routeService.getRoutes().subscribe(
+    this.routeService.getActiveRoutes().subscribe(
       res => {
         let r: any = res;
         if (r.success) {

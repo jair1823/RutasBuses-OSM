@@ -6,37 +6,49 @@ import { api } from "./url.api";
 })
 export class CompanyService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   save(data) {
-    return this.http.post(`${api}/company`,data);
+    return this.http.post(`${api}/company`, data);
   }
 
-  getCompany(id){
+  getCompany(id) {
     return this.http.get(`${api}/company/${id}`);
   }
 
-  getCompanies(){
+  getCompanies() {
     return this.http.get(`${api}/company`);
   }
 
-  deleteCompany(id){
+  getCompaniesActive() {
+    return this.http.get(`${api}/company/index/activas`);
+  }
+
+  deleteCompany(id) {
     return this.http.delete(`${api}/company/${id}`);
   }
 
-  updateCompany(id,data){
-    return this.http.put(`${api}/company/${id}`,data);
+  restore(id) {
+    return this.http.get(`${api}/company/restore/${id}`);
   }
 
-  createLog(id_user,id_company){
+  updateCompany(id, data) {
+    return this.http.put(`${api}/company/${id}`, data);
+  }
+
+  createLog(id_user, id_company) {
     return this.http.get(`${api}/company_log/new/${id_user}/${id_company}`);
   }
 
-  updateLog(id_user,id_company){
+  updateLog(id_user, id_company) {
     return this.http.get(`${api}/company_log/update/${id_user}/${id_company}`);
   }
 
-  deleteLog(id_user,id_company){
+  deleteLog(id_user, id_company) {
     return this.http.get(`${api}/company_log/delete/${id_user}/${id_company}`);
+  }
+
+  restoreLog(id_user, id_company) {
+    return this.http.get(`${api}/company_log/restore/${id_user}/${id_company}`);
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouteService } from 'src/app/services/route.service';
 
 import { Alert } from 'src/app/models/alert';
+import { SignInService } from 'src/app/services/sign-in.service';
 
 
 const NOROUTES: Alert = {
@@ -10,6 +11,10 @@ const NOROUTES: Alert = {
 
 const DELETEDROUTE: Alert = {
   type: 'info', message: 'Se elimino la ruta.'
+};
+
+const RESTOREROUTE: Alert = {
+  type: 'info', message: 'Se restauro la ruta.'
 };
 
 const CREATEDROUTE: Alert = {
@@ -27,13 +32,19 @@ export class RouteComponent implements OnInit {
 
   noRoutes: Alert;
   deletedRoute: Alert;
-  createdRoute:Alert;
+  createdRoute: Alert;
 
-  constructor(private routeService: RouteService) { }
+  message: Alert;
+
+  bDolar:boolean = false;
+
+  cDolar;
+
+  constructor(private routeService: RouteService, private login: SignInService) { }
 
   ngOnInit() {
     this.getRoutes();
-    if(localStorage.getItem('created_route')!=null){
+    if (localStorage.getItem('created_route') != null) {
       localStorage.removeItem('created_route');
       this.resetCreatedRoute();
     }
@@ -66,6 +77,16 @@ export class RouteComponent implements OnInit {
         if (r.success) {
           this.getRoutes();
           this.resetDeleteRoute();
+          this.routeService.deleteLog(this.login.getLocal().id_user, id).subscribe(
+            res => {
+              console.log(res);
+              console.log('listo.');
+            },
+            err => {
+              console.log(err);
+              console.log('Error con laravel.');
+            }
+          );
         } else {
           alert('Error al eliminar ruta');
         }
@@ -77,43 +98,69 @@ export class RouteComponent implements OnInit {
     )
   }
 
-  deletePoints(id) {
-    this.routeService.deletePoints(id).subscribe(
+  restoreRoute(id){
+    this.routeService.restore(id).subscribe(
       res => {
         let r: any = res;
         if (r.success) {
-          this.deleteRoute(id);
+          this.resetRestore();
+          this.getRoutes();
+          this.routeService.restoreLog(this.login.getLocal().id_user, id).subscribe(
+            res => {
+              console.log(res);
+              console.log('listo.');
+            },
+            err => {
+              console.log(err);
+              console.log('Error con laravel.');
+            }
+          );
         } else {
-          this.deleteRoute(id);
+          alert('Error al eliminar ruta');
         }
       },
       err => {
         console.log(err);
-        console.log('Error con laravel. borrando puntos');
+        console.log('Error con laravel. borrando ruta');
       }
     )
   }
 
-
-  closeNoRoutes() {
-    this.noRoutes = undefined;
+  closeMessage() {
+    this.message = undefined;
   }
   resetNoRoutes() {
-    this.noRoutes = NOROUTES;
+    this.message = NOROUTES;
   }
 
-  closeDeleteRoute() {
-    this.deletedRoute = undefined;
-  }
   resetDeleteRoute() {
-    this.deletedRoute = DELETEDROUTE;
+    this.message = DELETEDROUTE;
   }
 
-  closeCreatedRoute() {
-    this.createdRoute = undefined;
-  }
   resetCreatedRoute() {
-    this.createdRoute = CREATEDROUTE;
+    this.message = CREATEDROUTE;
+  }
+  resetRestore() {
+    this.message = RESTOREROUTE;
+  }
+
+  conversion(m){
+    return (m/this.cDolar).toFixed(2);
+  }
+
+  dolares(){
+    
+
+    this.routeService.dolar().subscribe(
+      res =>{
+        let r:any = res;
+        this.cDolar = r.compra;
+        this.bDolar = !this.bDolar;
+      },
+      err => {
+        console.log(err);
+      }
+    )
   }
 
 

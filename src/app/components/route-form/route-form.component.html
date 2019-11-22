@@ -13,7 +13,6 @@
 
                 <div class="col-3" *ngFor="let m of messages">
                     Punto: {{m.id}}
-
                     <div class="form-group">
                         <textarea class="form-control" (keyup)="updateMessage(m.id)" [id]="m.id"
                             [value]="m.me"></textarea>
