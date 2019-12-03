@@ -67,6 +67,12 @@ export class RouteService {
     return this.http.get(`${api}/route/by_destination/${id}`);
   }
 
+
+  getRoutesByOrigin(id1,id2) {
+    return this.http.get(`${api}/route/by_origin/${id1}/${id2}`);
+  }
+
+  
   getPoints(id) {
     return this.http.get(`${api}/point/${id}`);
   }

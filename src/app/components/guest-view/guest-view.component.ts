@@ -35,14 +35,24 @@ export class GuestViewComponent implements OnInit {
   allRoutes: any[] = [];
   selectedRoute: any = null;
 
-
+  typee:boolean = false;
 
   provinces: any[] = [];
   cantones: any[] = [];
   districs: any[] = [];
+
   selectedProvince: any = null;
   selectedCanton: any = null;
   selectedDistric: any = null;
+
+  
+  provinces2: any[] = [];
+  cantones2: any[] = [];
+  districs2: any[] = [];
+
+  selectedProvince2: any = null;
+  selectedCanton2: any = null;
+  selectedDistric2: any = null;
 
 
   accessClick: boolean = false;
@@ -93,12 +103,39 @@ export class GuestViewComponent implements OnInit {
       case 4:
         this.stopQuery();
         break;
+      case 5:
+        this.originQuery();
+        break;
       default:
         console.log("nel");
         break;
     }
   }
 
+  originQuery(){
+    this.typee = false;
+    this.selectedProvince = null;
+    this.selectedCanton = null;
+    this.selectedDistric = null;
+    this.selectedProvince2 = null;
+    this.selectedCanton2 = null;
+    this.selectedDistric2 = null;
+    this.routeService.getProvince().subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.provinces = r.data;
+        } else {
+          this.provinces = [];
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.provinces = [];
+      }
+    )
+  }
 
   stopQuery() {
     this.accessClick = true;
@@ -139,9 +176,8 @@ export class GuestViewComponent implements OnInit {
     //console.log(latLng(map.latlng.lat, map.latlng.lng));
   }
 
-
   samePosition(r) {
-    
+
     for (let index = 0; index < r.length; index++) {
       const p = r[index];
 
@@ -178,7 +214,6 @@ export class GuestViewComponent implements OnInit {
       }
     )
   }
-
 
   companyQuery() {
     this.selectedCompany = null;
@@ -266,7 +301,6 @@ export class GuestViewComponent implements OnInit {
       }
     )
   }
-
 
   districQuery() {
     this.selectedProvince = null;
@@ -432,5 +466,147 @@ export class GuestViewComponent implements OnInit {
     this.routesInfo = [];
     this.routeForWrite = [];
   }
+
+
+
+
+  selectProvince2() {
+    this.typee = false;
+    this.selectedCanton = null;
+    this.selectedDistric = null;
+    this.selectedProvince2 = null;
+    this.selectedCanton2 = null;
+    this.selectedDistric2 = null;
+    console.log();
+    this.routeService.getCantonByProvince(this.selectedProvince.id_province).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.cantones = r.data;
+        } else {
+          this.cantones = [];
+          console.log('No hay cantones');
+        }
+      },
+      err => {
+        this.cantones = [];
+        console.log(err);
+        console.log('Erro conexion');
+      }
+    )
+  }
+
+  selectCanton2() {
+    this.typee = false;
+    this.selectedDistric = null;
+    this.selectedProvince2 = null;
+    this.selectedCanton2 = null;
+    this.selectedDistric2 = null;
+    this.routeService.getDistricByCanton(this.selectedCanton.id_canton).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.districs = r.data;
+        } else {
+          this.districs = [];
+          console.log('No hay distritos');
+        }
+      },
+      err => {
+        this.districs = [];
+        console.log(err);
+        console.log('Erro conexion');
+      }
+    );
+  }
+
+  selectDistric2() {
+
+    this.selectedProvince2 = null;
+    this.selectedCanton2 = null;
+    this.selectedDistric2 = null;
+    this.routeService.getProvince().subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.typee = true;
+          this.provinces2 = r.data;
+        } else {
+          this.provinces2 = [];
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.provinces2 = [];
+      }
+    )
+  }
+
+  selectProvince3() {
+    this.selectedCanton2 = null;
+    this.selectedDistric2 = null;
+    console.log();
+    this.routeService.getCantonByProvince(this.selectedProvince2.id_province).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.cantones2 = r.data;
+        } else {
+          this.cantones2 = [];
+          console.log('No hay cantones');
+        }
+      },
+      err => {
+        this.cantones2 = [];
+        console.log(err);
+        console.log('Erro conexion');
+      }
+    )
+  }
+
+  selectCanton3() {
+    this.selectedDistric2 = null;
+    this.routeService.getDistricByCanton(this.selectedCanton2.id_canton).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.districs2 = r.data;
+        } else {
+          this.districs2 = [];
+          console.log('No hay distritos');
+        }
+      },
+      err => {
+        this.districs2 = [];
+        console.log(err);
+        console.log('Erro conexion');
+      }
+    );
+  }
+
+  selectDistric3() {
+    console.log(this.selectedDistric);
+    console.log(this.selectedDistric2);  
+    this.refreshMap();
+    this.routeService.getRoutesByOrigin(this.selectedDistric.id_distric,this.selectedDistric2.id_distric).subscribe(
+      res => {
+        let r: any = res;
+        if (r.success) {
+          this.routesInfo = r.data;
+          this.getRoutePoints();
+        } else {
+          this.routesInfo = [];
+          console.log('no routes')
+        }
+      },
+      err => {
+        console.log(err);
+        console.log('error con laravel');
+        this.routesInfo = [];
+      }
+    );
+  }
+
 
 }

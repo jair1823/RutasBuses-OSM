@@ -11,6 +11,7 @@
                             <option [ngValue]="2">Ruta específica</option>
                             <option [ngValue]="3">Ruta por destino</option>
                             <option [ngValue]="4">Ruta por parada común</option>
+                            <option [ngValue]="5">Quiero ir a...</option>
                         </select>
                     </div>
 
@@ -58,8 +59,56 @@
                             </select>
                         </div>
                     </div>
+
                     <div *ngIf="query === 4">
-                        query 4
+                        Haga click en en mapa sobre una parada en especifico.
+                    </div>
+
+                    <div *ngIf="query === 5">
+                        <label>Origen</label>
+                        <div class="form-group">
+                            <select class="form-control" [(ngModel)]="selectedProvince" (change)="selectProvince2()">
+                                <option [ngValue]="null" disabled>Provincia</option>
+                                <option *ngFor="let p of provinces" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" [(ngModel)]="selectedCanton" (change)="selectCanton2()">
+                                <option [ngValue]="null" disabled>Canton</option>
+                                <option *ngFor="let p of cantones" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+
+                            <select class="form-control" [(ngModel)]="selectedDistric" (change)="selectDistric2()">
+                                <option [ngValue]="null" disabled>Distrito</option>
+                                <option *ngFor="let p of districs" [ngValue]="p">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <hr>
+                        <div *ngIf="typee">
+                            <label>Destino</label>
+                            <div class="form-group">
+                                <select class="form-control" [(ngModel)]="selectedProvince2"
+                                    (change)="selectProvince3()">
+                                    <option [ngValue]="null" disabled>Provincia</option>
+                                    <option *ngFor="let p of provinces2" [ngValue]="p">{{p.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" [(ngModel)]="selectedCanton2" (change)="selectCanton3()">
+                                    <option [ngValue]="null" disabled>Canton</option>
+                                    <option *ngFor="let p of cantones2" [ngValue]="p">{{p.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+
+                                <select class="form-control" [(ngModel)]="selectedDistric2" (change)="selectDistric3()">
+                                    <option [ngValue]="null" disabled>Distrito</option>
+                                    <option *ngFor="let p of districs2" [ngValue]="p">{{p.name}}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
